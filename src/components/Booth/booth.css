@@ -1,0 +1,7 @@
+#booth {
+    position: absolute;
+    top: 8em;
+    left: 0;
+    width: 7%;
+    z-index: 2;
+}

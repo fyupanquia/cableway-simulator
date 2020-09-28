@@ -1,0 +1,14 @@
+.tower {
+    position: absolute;
+    width: 10%;
+    z-index: 1;
+    height: 50%;
+}
+.tower.left {
+    top:  10%;
+    left: 0%;
+}
+.tower.rigth {
+    top: 12%;
+    right: 0%;
+}
