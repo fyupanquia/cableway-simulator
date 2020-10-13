@@ -1,0 +1,16 @@
+#indicators {
+    position: absolute;
+    top: 0em;
+    width: 100%;
+    z-index: 2;
+    text-align: center;
+}
+#indicators table{
+    margin: 0 auto;
+}
+
+#indicators table td, #indicators table th {
+border: 1px solid #dddddd;
+text-align: left;
+padding: 8px;
+}
