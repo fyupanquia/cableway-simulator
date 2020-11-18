@@ -1,16 +1,26 @@
+const detafultVelocity = 0
+const defaultDistance = 0
 const defaultState = {
-	boothAction:null,
+	boothAction: null,
 	timer: 0,
 	isMoving: false,
 	XPosition: 0,
 	YPosition: 0,
 	traveledDistance: 0,
-	totalDistance: 300,
-	velocity: 0,
-	acceleration: 5,
+	totalDistance: defaultDistance,
+	velocity: detafultVelocity,
+	acceleration: 0,
 	wasStopped: false,
+	character: null
 }
 
+/*
+{
+		gender: null,
+		name: null,
+		weight: null
+	}
+*/
 defaultState.screenWidth = document.getElementById('root').offsetWidth
 defaultState.screenHeight = document.getElementById('root').offsetHeight
 
@@ -45,7 +55,7 @@ const reducer = (state, action) => {
 		case 'SET_MOVING':
 			return {
 				...reducerState,
-				wasStopped: action.payload===false || reducerState.wasStopped,
+				//wasStopped: action.payload===false || reducerState.wasStopped,
 				isMoving: action.payload,
 			}
 		case 'SET_TRAVELED_DISTANCE':
@@ -67,6 +77,16 @@ const reducer = (state, action) => {
 			return {
 				...reducerState,
 				wasStopped: action.payload,
+			}
+		case 'SET_VELOCITY':
+			return {
+				...reducerState,
+				velocity: action.payload || detafultVelocity,
+			}
+		case 'SET_DISTANCE':
+			return {
+				...reducerState,
+				totalDistance: action.payload || defaultDistance,
 			}
 		default:
 			return reducerState

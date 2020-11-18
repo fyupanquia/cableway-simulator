@@ -1,7 +1,7 @@
+import React from "react";
 import { connect } from 'react-redux'
 import "../assets/css/App.css";
 import "../assets/css/normalize.css";
-import React from "react";
 import Controls from "../components/Controls";
 import Indicators from "../components/Indicators";
 import Scenary from "../components/Scenary";
@@ -9,17 +9,26 @@ import Booth from "../components/Booth";
 import Man from "../components/Man";
 import Woman from "../components/Woman";
 import Tower from "../components/Tower";
-import { startTrip, stopTrip, resetTrip } from '../actions'
+import Character from './Character'
+import { startTrip, stopTrip, resetTrip, setVelocity, setDistance } from '../actions'
 
-function App({ XPosition, startTrip, stopTrip, resetTrip, isMoving, traveledDistance, totalDistance, velocity, acceleration, timer, wasStopped }) {
-	return <div> 
-		<Indicators 
-			traveledDistance={traveledDistance} 
-			totalDistance={totalDistance} 
-			velocity={velocity} 
-			acceleration={acceleration} 
-			timer={timer}/>
-		<Controls 
+function App({ 
+				XPosition, startTrip, stopTrip, resetTrip, setVelocity, setDistance, 
+				isMoving, traveledDistance, totalDistance, velocity, acceleration, timer, wasStopped,
+				character }) {
+	return !character ? <Character/>:
+		<div>
+		<Indicators
+			traveledDistance={traveledDistance}
+			totalDistance={totalDistance}
+			velocity={velocity}
+			acceleration={acceleration}
+			timer={timer}
+			isMoving={isMoving}
+			setVelocity={setVelocity}
+			setDistance={setDistance}
+		/>
+		<Controls
 			startTrip={startTrip}
 			stopTrip={stopTrip}
 			resetTrip={resetTrip}
@@ -45,13 +54,16 @@ const mapStateToProps = (state) => {
 		acceleration: state.acceleration,
 		timer: state.timer,
 		wasStopped: state.wasStopped,
+		character: state.character
 	}
 }
 
 const mapDispatchToProps = {
 	startTrip,
 	stopTrip,
-	resetTrip
+	resetTrip,
+	setVelocity,
+	setDistance
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

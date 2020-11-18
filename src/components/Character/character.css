@@ -1,0 +1,9 @@
+#character{
+    width: 100%;
+}
+#character .characters {
+    text-align: center;
+}
+#character .girl , #character .boy {
+    width: 7%;
+}
