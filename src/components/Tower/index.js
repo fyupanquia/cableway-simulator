@@ -3,5 +3,5 @@ import "./tower.css";
 import tower from "../../assets/imgs/tower.png";
 
 export default ({ position }) => {
-  return <img class={`tower ${position}`} src={tower} alt="" />;
+  return <img className={`tower ${position}`} src={tower} alt="" />;
 };
