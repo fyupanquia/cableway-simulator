@@ -1,6 +1,9 @@
 import React from "react";
 import './controls.css'
-export default ({ startTrip, stopTrip, resetTrip, isMoving, wasStopped }) => {
+import { connect } from "react-redux";
+import { startTrip, stopTrip, resetTrip } from "../../actions";
+
+const Control = ({ startTrip, stopTrip, resetTrip, isMoving, wasStopped }) => {
 
     const onContinue = () => {
         startTrip({ resume: true })
@@ -24,3 +27,19 @@ export default ({ startTrip, stopTrip, resetTrip, isMoving, wasStopped }) => {
         }
     </div>
 };
+
+
+const mapStateToProps = (state) => {
+  return {
+    isMoving: state.isMoving,
+    wasStopped: state.wasStopped,
+  };
+};
+
+const mapDispatchToProps = {
+  startTrip,
+  stopTrip,
+  resetTrip,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Control);

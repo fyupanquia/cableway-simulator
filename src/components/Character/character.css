@@ -1,9 +1,45 @@
 #character{
-    width: 100%;
+    width: calc(100% - 2em);
+    text-align: center;
+    height: calc(100vh - 2em);
+    background-color: #F9D196;
+    color: #8A713B;
+    font-family: Arial;
+    font-size: 1.2em;
+    padding: 1em;
 }
 #character .characters {
     text-align: center;
 }
-#character .girl , #character .boy {
-    width: 7%;
+#character .characters img {
+    width: 12%;
+    cursor: pointer;
+    padding: .5em;
+}
+#character .characters img.selected {
+    border: .25em solid#8A713B;
+}
+
+#character .characters img:hover{
+    border: .25em dashed #817E4F;
+}
+#character .genre-weight > div{
+    width: 50%;
+    display: inline-block;
+}
+#character .form-field{
+    text-align: center;
+    margin: 1em 0em;
+
+}
+#character .form-field input {
+    width: 90%;
+    font-size: 25px;
+    text-align: center;
+}
+
+#character .form-field input[type=button]{
+    background-color: #FEDB99;
+    padding: .5em 0em;
+    cursor: pointer;
 }
