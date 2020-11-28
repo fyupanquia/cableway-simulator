@@ -5,14 +5,16 @@ import "../assets/css/normalize.css";
 import Controls from "../components/Controls";
 import Indicators from "../components/Indicators";
 import Scenary from "../components/Scenary";
+import Socket from "../components/Socket";
 import Booth from "../components/Booth";
 import Tower from "../components/Tower";
 import Character from "./Character";
+import Passengers from "../components/Passengers";
 import { checkAdmin } from "../actions";
 
-function App({ XPosition, character, checkAdmin }) {
+function App({ XPosition, character, checkAdmin, showPassengers }) {
   useEffect(() => {
-      checkAdmin();
+    checkAdmin();
   }, [checkAdmin]);
 
   return !character.assigned ? (
@@ -25,6 +27,8 @@ function App({ XPosition, character, checkAdmin }) {
       <Booth XPosition={XPosition} />
       <Tower position={"left"} />
       <Tower position={"rigth"} />
+      <Socket />
+      {showPassengers ? <Passengers /> : ""}
     </div>
   );
 }
@@ -33,6 +37,7 @@ const mapStateToProps = (state) => {
   return {
     XPosition: state.XPosition,
     character: state.character,
+    showPassengers: state.showPassengers,
   };
 };
 

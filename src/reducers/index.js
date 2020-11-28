@@ -1,4 +1,4 @@
-const ADMIN = 'FHguzArPrQWgXp8E'
+const ADMIN = "frank";
 const detafultVelocity = 0;
 const defaultDistance = 0;
 const defaultState = {
@@ -14,10 +14,12 @@ const defaultState = {
   wasStopped: false,
   character: {
     assigned: false,
-    isAdmin: function() { 
-      return this.name === ADMIN
+    isAdmin: function () {
+      return this.name === ADMIN;
     },
   },
+  characters: [],
+  showPassengers:false
 };
 defaultState.screenWidth = document.getElementById("root").offsetWidth;
 defaultState.screenHeight = document.getElementById("root").offsetHeight;
@@ -117,6 +119,24 @@ const reducer = (state, action) => {
           ...reducerState.character,
           assigned: action.payload,
         },
+      };
+    case "SET_ID":
+      return {
+        ...reducerState,
+        character: {
+          ...reducerState.character,
+          id: action.payload,
+        },
+      };
+    case "SET_CHARACTERS":
+      return {
+        ...reducerState,
+        characters: action.payload,
+      };
+    case "SET_SHOW_PASSENGERS":
+      return {
+        ...reducerState,
+        showPassengers: action.payload,
       };
     default:
       return reducerState;

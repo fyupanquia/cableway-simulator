@@ -1,0 +1,15 @@
+.character-passenger{
+    margin: .5em 0em;
+}
+.character-passenger > div{
+    display: inline-block;
+}
+.character-passenger > div:first-child{
+    width: 80%;
+}
+.character-passenger > div:last-child{
+    width: 20%;
+}
+.character-passenger input{
+    width: 100%;
+}

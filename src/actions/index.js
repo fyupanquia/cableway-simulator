@@ -1,3 +1,5 @@
+import uuid  from "random-uuid-v4"
+
 export const setGenre = (payload) => {
   return async (dispatch) => {
     dispatch({
@@ -9,7 +11,6 @@ export const setGenre = (payload) => {
 
 export const setName = (payload) => {
   return async (dispatch) => {
-	  console.log('alv 2')
     dispatch({
       type: "SET_NAME",
       payload,
@@ -28,6 +29,7 @@ export const setWeight = (payload) => {
 
 export const setAssigned = (payload) => {
   payload.assigned = true;
+  payload.id = uuid()
   localStorage.setItem("__character__", JSON.stringify(payload));
   return async (dispatch) => {
     dispatch({
@@ -37,7 +39,6 @@ export const setAssigned = (payload) => {
   };
 };
 
-
 export const checkAdmin = (payload) => {
   return async (dispatch) => {
     let __character__ = localStorage.getItem("__character__");
@@ -46,6 +47,10 @@ export const checkAdmin = (payload) => {
 
 	if (!__character__) return false
 
+    dispatch({
+      type: "SET_ID",
+      payload: __character__.id,
+    });
     dispatch({
       type: "SET_GENRE",
       payload: __character__.genre,
@@ -65,6 +70,14 @@ export const checkAdmin = (payload) => {
   };
 };
 
+export const showPassengers = (payload) => {
+  return async (dispatch) => {
+    dispatch({
+      type: "SET_SHOW_PASSENGERS",
+      payload,
+    });
+  };
+};
 
 export const setVelocity = (payload) => {
   return async (dispatch) => {
@@ -207,5 +220,16 @@ export const startTrip = ({ resume }) => {
       console.log(error);
       dispatch({ type: "SET_MOVING", payload: false });
     }
+  };
+};
+
+
+
+export const setCharacters = (payload) => {
+  return async (dispatch) => {
+    dispatch({
+      type: "SET_CHARACTERS",
+      payload,
+    });
   };
 };
