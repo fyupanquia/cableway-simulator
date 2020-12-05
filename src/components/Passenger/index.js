@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import './passenger.css'
-import { startTrip, stopTrip, resetTrip, showPassengers } from "../../actions";
 
 const Passenger = ({ character }) => {
 

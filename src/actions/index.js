@@ -1,4 +1,4 @@
-import uuid  from "random-uuid-v4"
+import uuid from "random-uuid-v4";
 
 export const setGenre = (payload) => {
   return async (dispatch) => {
@@ -29,7 +29,7 @@ export const setWeight = (payload) => {
 
 export const setAssigned = (payload) => {
   payload.assigned = true;
-  payload.id = uuid()
+  payload.id = uuid();
   localStorage.setItem("__character__", JSON.stringify(payload));
   return async (dispatch) => {
     dispatch({
@@ -43,9 +43,9 @@ export const checkAdmin = (payload) => {
   return async (dispatch) => {
     let __character__ = localStorage.getItem("__character__");
     if (!__character__) return false;
-	__character__ = JSON.parse(__character__);
+    __character__ = JSON.parse(__character__);
 
-	if (!__character__) return false
+    if (!__character__) return false;
 
     dispatch({
       type: "SET_ID",
@@ -92,6 +92,33 @@ export const setDistance = (payload) => {
   return async (dispatch) => {
     dispatch({
       type: "SET_DISTANCE",
+      payload,
+    });
+  };
+};
+
+export const setMass = (payload) => {
+  return async (dispatch) => {
+    dispatch({
+      type: "SET_MASS",
+      payload,
+    });
+  };
+};
+
+export const setYTowerB = (payload) => {
+  return async (dispatch) => {
+    dispatch({
+      type: "SET_Y_TOWER_B",
+      payload,
+    });
+  };
+};
+
+export const setAngle = (payload) => {
+  return async (dispatch) => {
+    dispatch({
+      type: "SET_ANGLE",
       payload,
     });
   };
@@ -154,6 +181,9 @@ export const startTrip = ({ resume }) => {
         totalDistance,
         boothAction,
         velocity,
+        angle,
+        gravity,
+        mass,
       } = getState();
       let { timer } = getState();
 
@@ -199,6 +229,21 @@ export const startTrip = ({ resume }) => {
           const distance = totalDistance * ((index + 1) / steps);
           timer += interval_time;
 
+          let high;
+          if (action === "ADD_X") {
+            high = Math.sin(angle) * distance;
+            dispatch({
+              type: "SET_GPE",
+              payload: parseFloat(gravity * mass * high).toFixed(1),
+            });
+          } else {
+            high = Math.sin(angle) * (totalDistance-distance);
+            dispatch({
+              type: "SET_GPE",
+              payload: parseFloat(gravity * mass * high).toFixed(1),
+            });
+          }
+
           dispatch({
             type: "SET_TRAVELED_DISTANCE",
             payload: parseFloat(distance.toFixed(2)),
@@ -222,8 +267,6 @@ export const startTrip = ({ resume }) => {
     }
   };
 };
-
-
 
 export const setCharacters = (payload) => {
   return async (dispatch) => {

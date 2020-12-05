@@ -11,6 +11,7 @@ import Tower from "../components/Tower";
 import Character from "./Character";
 import Passengers from "../components/Passengers";
 import { checkAdmin } from "../actions";
+import Wire from "../components/Wire"
 
 function App({ XPosition, character, checkAdmin, showPassengers }) {
   useEffect(() => {
@@ -27,7 +28,7 @@ function App({ XPosition, character, checkAdmin, showPassengers }) {
       <Booth XPosition={XPosition} />
       <Tower position={"left"} />
       <Tower position={"rigth"} />
-      <Socket />
+      <Wire/>
       {showPassengers ? <Passengers /> : ""}
     </div>
   );

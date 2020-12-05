@@ -1,6 +1,11 @@
 const ADMIN = "frank";
 const detafultVelocity = 0;
 const defaultDistance = 0;
+const defaultMass = 50;
+const defaultYTowerB = 0;
+const defaultAngle = 0;
+const GPE = 0;
+const gravity= 9.81;
 const defaultState = {
   boothAction: null,
   timer: 0,
@@ -10,8 +15,9 @@ const defaultState = {
   traveledDistance: 0,
   totalDistance: defaultDistance,
   velocity: detafultVelocity,
-  acceleration: 0,
+  mass: defaultMass,
   wasStopped: false,
+  YTowerB: defaultYTowerB,
   character: {
     assigned: false,
     isAdmin: function () {
@@ -19,7 +25,10 @@ const defaultState = {
     },
   },
   characters: [],
-  showPassengers:false
+  showPassengers: false,
+  angle: defaultAngle,
+  GPE,
+  gravity
 };
 defaultState.screenWidth = document.getElementById("root").offsetWidth;
 defaultState.screenHeight = document.getElementById("root").offsetHeight;
@@ -88,6 +97,11 @@ const reducer = (state, action) => {
         ...reducerState,
         totalDistance: action.payload || defaultDistance,
       };
+    case "SET_MASS":
+      return {
+        ...reducerState,
+        mass: action.payload || defaultMass,
+      };
     case "SET_GENRE":
       return {
         ...reducerState,
@@ -137,6 +151,21 @@ const reducer = (state, action) => {
       return {
         ...reducerState,
         showPassengers: action.payload,
+      };
+    case "SET_Y_TOWER_B":
+      return {
+        ...reducerState,
+        YTowerB: action.payload,
+      };
+    case "SET_ANGLE":
+      return {
+        ...reducerState,
+        angle: action.payload,
+      };
+    case "SET_GPE":
+      return {
+        ...reducerState,
+        GPE: action.payload,
       };
     default:
       return reducerState;

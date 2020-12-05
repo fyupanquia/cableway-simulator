@@ -10,9 +10,13 @@ const Passengers = ({ characters, showPassengers }) => {
     <div id="popup" className="overlay">
       <div className="popupBody">
         <h3>Connected</h3>
-        <a onClick={(e)=> { showPassengers(false) }}>
+        <button
+          onClick={(e) => {
+            showPassengers(false);
+          }}
+        >
           &times;
-        </a>
+        </button>
         <div className="popupContent">
           <ul>
             {characters.map((c) => {
