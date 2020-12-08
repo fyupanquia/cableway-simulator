@@ -190,17 +190,14 @@ export const startTrip = ({ resume }) => {
       if (velocity <= 0 || totalDistance <= 0) return;
 
       dispatch({ type: "SET_MOVING", payload: true });
-      if (resume !== true)
-        dispatch({ type: "SET_TRAVELED_DISTANCE", payload: 0 });
-      if (resume !== true) dispatch({ type: "SET_TIMER", payload: 0 });
+      if (resume !== true){
+		dispatch({ type: "SET_TRAVELED_DISTANCE", payload: 0 });
+		dispatch({ type: "SET_TIMER", payload: 0 });
+		timer = 0
+	  }
 
-      let seconds = parseFloat((totalDistance / velocity).toFixed(2));
-      const action =
-        resume === true
-          ? boothAction
-          : screenWidth / 2 > XPosition
-          ? "ADD_X"
-          : "RMV_X";
+	  let seconds = parseFloat((totalDistance / velocity).toFixed(2));
+      const action = resume === true ? boothAction : (screenWidth / 2 > XPosition ? "ADD_X" : "RMV_X");
 
       dispatch({ type: "SET_BOOTH_ACTION", payload: action });
       const booth = document.getElementById("booth");
@@ -208,16 +205,27 @@ export const startTrip = ({ resume }) => {
 
       const rigthTowerWidth = rigthTower.width;
       const boothWidth = booth.width;
-      let step = resume === true ? parseInt(XPosition / intervalStep) : 0;
+      
       const steps = parseInt(
         (screenWidth - (boothWidth + rigthTowerWidth / 4)) / intervalStep
       );
 
-      const interval_time = parseFloat((seconds / steps).toFixed(2));
+	  const interval_time = parseFloat((seconds / steps).toFixed(2));
+	  
+	  let step =
+      resume === true
+        ? action === "ADD_X"
+          ? parseInt(XPosition / intervalStep)
+          : parseInt((((steps * intervalStep) - XPosition)) / intervalStep)
+        : 0;
+		  
+      let high;
+	  let ek, ep;
 
-      for (let index = step; index < steps; index++) {
+      for (var index = step; index < steps; index++) {
         const { isMoving } = getState();
-        if (isMoving) {
+		if (!isMoving) break;
+		
           await waitMotion(
             dispatch,
             {
@@ -225,24 +233,37 @@ export const startTrip = ({ resume }) => {
               payload: intervalStep,
             },
             interval_time * 1000
-          );
+		  );
+		  
           const distance = totalDistance * ((index + 1) / steps);
           timer += interval_time;
 
-          let high;
           if (action === "ADD_X") {
             high = Math.sin(angle) * distance;
+            ep = parseFloat(gravity * mass * high).toFixed(1) * 1;
             dispatch({
               type: "SET_GPE",
-              payload: parseFloat(gravity * mass * high).toFixed(1),
+              payload: ep,
             });
           } else {
-            high = Math.sin(angle) * (totalDistance-distance);
+            high = Math.sin(angle) * (totalDistance - distance);
+            ep = parseFloat(gravity * mass * high).toFixed(1) * 1;
             dispatch({
               type: "SET_GPE",
-              payload: parseFloat(gravity * mass * high).toFixed(1),
+              payload: ep,
             });
           }
+
+          ek = parseFloat(0.5 * mass * velocity ** 2);
+          dispatch({
+            type: "SET_KE",
+            payload: ek,
+          });
+
+          dispatch({
+            type: "SET_W",
+            payload: ek + ep,
+          });
 
           dispatch({
             type: "SET_TRAVELED_DISTANCE",
@@ -252,15 +273,25 @@ export const startTrip = ({ resume }) => {
             type: "SET_TIMER",
             payload: parseFloat(timer.toFixed(1)),
           });
-        } else {
-          break;
-        }
       }
+	  dispatch({ type: "SET_MOVING", payload: false });
 
-      dispatch({ type: "SET_MOVING", payload: false });
-      dispatch({ type: "SET_WAS_STOPPED", payload: false });
-      dispatch({ type: "SET_TIMER", payload: seconds });
-      dispatch({ type: "SET_TRAVELED_DISTANCE", payload: totalDistance });
+      if (index === steps) {
+        dispatch({
+          type: "SET_KE",
+          payload: 0,
+        });
+        dispatch({
+          type: "SET_W",
+          payload: 0 + ep,
+        });
+        dispatch({ type: "SET_WAS_STOPPED", payload: false });
+        dispatch({ type: "SET_TIMER", payload: seconds });
+        dispatch({ type: "SET_TRAVELED_DISTANCE", payload: totalDistance });
+      } else {
+        // it was stopped
+        dispatch({ type: "SET_WAS_STOPPED", payload: true });
+      }
     } catch (error) {
       console.log(error);
       dispatch({ type: "SET_MOVING", payload: false });

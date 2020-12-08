@@ -5,7 +5,9 @@ const defaultMass = 50;
 const defaultYTowerB = 0;
 const defaultAngle = 0;
 const GPE = 0;
-const gravity= 9.81;
+const KE = 0;
+const W = 0;
+const gravity = 9.81;
 const defaultState = {
   boothAction: null,
   timer: 0,
@@ -28,7 +30,9 @@ const defaultState = {
   showPassengers: false,
   angle: defaultAngle,
   GPE,
-  gravity
+  KE,
+  W,
+  gravity,
 };
 defaultState.screenWidth = document.getElementById("root").offsetWidth;
 defaultState.screenHeight = document.getElementById("root").offsetHeight;
@@ -47,7 +51,6 @@ const reducer = (state, action) => {
       };
     case "ADD_X":
       reducerState.XPosition += action.payload || 1;
-      //console.log(reducerState.XPosition)
       return {
         ...reducerState,
       };
@@ -64,7 +67,6 @@ const reducer = (state, action) => {
     case "SET_MOVING":
       return {
         ...reducerState,
-        //wasStopped: action.payload===false || reducerState.wasStopped,
         isMoving: action.payload,
       };
     case "SET_TRAVELED_DISTANCE":
@@ -166,6 +168,16 @@ const reducer = (state, action) => {
       return {
         ...reducerState,
         GPE: action.payload,
+      };
+    case "SET_KE":
+      return {
+        ...reducerState,
+        KE: action.payload,
+      };
+    case "SET_W":
+      return {
+        ...reducerState,
+        W: action.payload,
       };
     default:
       return reducerState;

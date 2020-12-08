@@ -39,6 +39,8 @@ const Indicator = ({
   setYTowerB,
   setAngle,
   GPE,
+  KE,
+  W
 }) => {
   const [newYTowerB, setNewYTowerB] = useState("");
   const [newMass, setNewMass] = useState("");
@@ -80,8 +82,8 @@ const Indicator = ({
   useEffect(() => {
     let angle = 0;
     if (totalDistance > 0 && YTowerB > 0 && totalDistance > YTowerB) {
-	  angle = Math.asin(YTowerB / totalDistance)
-	  setNewAngle(parseFloat(angle * (180 / Math.PI)).toFixed(1));
+      angle = Math.asin(YTowerB / totalDistance);
+      setNewAngle(parseFloat(angle * (180 / Math.PI)).toFixed(1));
     } else setNewAngle(angle);
 
     setAngle(angle);
@@ -98,7 +100,9 @@ const Indicator = ({
             <th>Distance</th>
             <th>Tower B</th>
             <th>Angle</th>
+            <th>K.E.</th>
             <th>G.P.E.</th>
+            <th>W</th>
             <th>Timer</th>
           </tr>
         </thead>
@@ -198,7 +202,9 @@ const Indicator = ({
               )}
             </td>
             <td>{newangle}°</td>
+            <td>{KE}J</td>
             <td>{GPE}J</td>
+            <td>{W}J</td>
             <td>{timer}s</td>
           </tr>
         </tbody>
@@ -218,6 +224,8 @@ const mapStateToProps = (state) => {
     character: state.character,
     YTowerB: state.YTowerB,
     GPE: state.GPE,
+    KE: state.KE,
+    W: state.W
   };
 };
 
