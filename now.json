@@ -1,0 +1,12 @@
+{
+    "version":2,
+    "name":"cableway-simulator",
+    "alias":"cableway-simulator.now.sh",
+    "builds":[
+        {"src":"package.json","use":"@now/static-build","config":{"distDir":"build"}}
+    ],
+    "routes":[
+        {"src":"/static/(.*)", "headers":{"cache-control":"s-maxage=0, inmutable"}, "dest":"/static/$1"},
+        {"src":"/favicon.ico", "dest":"/favicon.ico"}
+    ]
+}

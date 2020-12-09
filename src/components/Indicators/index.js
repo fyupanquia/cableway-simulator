@@ -40,7 +40,7 @@ const Indicator = ({
   setAngle,
   GPE,
   KE,
-  W
+  ME,
 }) => {
   const [newYTowerB, setNewYTowerB] = useState("");
   const [newMass, setNewMass] = useState("");
@@ -102,7 +102,7 @@ const Indicator = ({
             <th>Angle</th>
             <th>K.E.</th>
             <th>G.P.E.</th>
-            <th>W</th>
+            <th>ΔM.E.</th>
             <th>Timer</th>
           </tr>
         </thead>
@@ -204,7 +204,7 @@ const Indicator = ({
             <td>{newangle}°</td>
             <td>{KE}J</td>
             <td>{GPE}J</td>
-            <td>{W}J</td>
+            <td>{ME}J</td>
             <td>{timer}s</td>
           </tr>
         </tbody>
@@ -225,7 +225,7 @@ const mapStateToProps = (state) => {
     YTowerB: state.YTowerB,
     GPE: state.GPE,
     KE: state.KE,
-    W: state.W
+    ME: state.ME,
   };
 };
 

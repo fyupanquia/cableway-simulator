@@ -1,12 +1,12 @@
 const ADMIN = "frank";
-const detafultVelocity = 0;
-const defaultDistance = 0;
+const detafultVelocity = 5;
+const defaultDistance = 100;
 const defaultMass = 50;
-const defaultYTowerB = 0;
+const defaultYTowerB = 50;
 const defaultAngle = 0;
 const GPE = 0;
 const KE = 0;
-const W = 0;
+const ME = 0;
 const gravity = 9.81;
 const defaultState = {
   boothAction: null,
@@ -31,7 +31,7 @@ const defaultState = {
   angle: defaultAngle,
   GPE,
   KE,
-  W,
+  ME,
   gravity,
 };
 defaultState.screenWidth = document.getElementById("root").offsetWidth;
@@ -174,10 +174,10 @@ const reducer = (state, action) => {
         ...reducerState,
         KE: action.payload,
       };
-    case "SET_W":
+    case "SET_ME":
       return {
         ...reducerState,
-        W: action.payload,
+        ME: action.payload,
       };
     default:
       return reducerState;

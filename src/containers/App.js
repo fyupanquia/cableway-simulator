@@ -5,9 +5,10 @@ import "../assets/css/normalize.css";
 import Controls from "../components/Controls";
 import Indicators from "../components/Indicators";
 import Scenary from "../components/Scenary";
-import Socket from "../components/Socket";
+//import Socket from "../components/Socket";
 import Booth from "../components/Booth";
 import Tower from "../components/Tower";
+import UTP from "../components/UTP";
 import Character from "./Character";
 import Passengers from "../components/Passengers";
 import { checkAdmin } from "../actions";
@@ -28,8 +29,9 @@ function App({ XPosition, character, checkAdmin, showPassengers }) {
       <Booth XPosition={XPosition} />
       <Tower position={"left"} />
       <Tower position={"rigth"} />
-      <Wire/>
+      <Wire />
       {showPassengers ? <Passengers /> : ""}
+      <UTP/>
     </div>
   );
 }

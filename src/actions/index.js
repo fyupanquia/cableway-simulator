@@ -190,14 +190,19 @@ export const startTrip = ({ resume }) => {
       if (velocity <= 0 || totalDistance <= 0) return;
 
       dispatch({ type: "SET_MOVING", payload: true });
-      if (resume !== true){
-		dispatch({ type: "SET_TRAVELED_DISTANCE", payload: 0 });
-		dispatch({ type: "SET_TIMER", payload: 0 });
-		timer = 0
-	  }
+      if (resume !== true) {
+        dispatch({ type: "SET_TRAVELED_DISTANCE", payload: 0 });
+        dispatch({ type: "SET_TIMER", payload: 0 });
+        timer = 0;
+      }
 
-	  let seconds = parseFloat((totalDistance / velocity).toFixed(2));
-      const action = resume === true ? boothAction : (screenWidth / 2 > XPosition ? "ADD_X" : "RMV_X");
+      let seconds = parseFloat((totalDistance / velocity).toFixed(2));
+      const action =
+        resume === true
+          ? boothAction
+          : screenWidth / 2 > XPosition
+          ? "ADD_X"
+          : "RMV_X";
 
       dispatch({ type: "SET_BOOTH_ACTION", payload: action });
       const booth = document.getElementById("booth");
@@ -205,82 +210,90 @@ export const startTrip = ({ resume }) => {
 
       const rigthTowerWidth = rigthTower.width;
       const boothWidth = booth.width;
-      
+
       const steps = parseInt(
         (screenWidth - (boothWidth + rigthTowerWidth / 4)) / intervalStep
       );
 
-	  const interval_time = parseFloat((seconds / steps).toFixed(2));
-	  
-	  let step =
-      resume === true
-        ? action === "ADD_X"
-          ? parseInt(XPosition / intervalStep)
-          : parseInt((((steps * intervalStep) - XPosition)) / intervalStep)
-        : 0;
-		  
+      const interval_time = parseFloat((seconds / steps).toFixed(2));
+
+      let step =
+        resume === true
+          ? action === "ADD_X"
+            ? parseInt(XPosition / intervalStep)
+            : parseInt((steps * intervalStep - XPosition) / intervalStep)
+          : 0;
+
       let high;
-	  let ek, ep;
+      let ek, ep;
 
       for (var index = step; index < steps; index++) {
         const { isMoving } = getState();
-		if (!isMoving) break;
-		
-          await waitMotion(
-            dispatch,
-            {
-              type: action,
-              payload: intervalStep,
-            },
-            interval_time * 1000
-		  );
-		  
-          const distance = totalDistance * ((index + 1) / steps);
-          timer += interval_time;
+        if (!isMoving) break;
 
-          if (action === "ADD_X") {
-            high = Math.sin(angle) * distance;
-            ep = parseFloat(gravity * mass * high).toFixed(1) * 1;
-            dispatch({
-              type: "SET_GPE",
-              payload: ep,
-            });
-          } else {
-            high = Math.sin(angle) * (totalDistance - distance);
-            ep = parseFloat(gravity * mass * high).toFixed(1) * 1;
-            dispatch({
-              type: "SET_GPE",
-              payload: ep,
-            });
-          }
+        await waitMotion(
+          dispatch,
+          {
+            type: action,
+            payload: intervalStep,
+          },
+          interval_time * 1000
+        );
 
-          ek = parseFloat(0.5 * mass * velocity ** 2);
+        const distance = parseFloat(
+          (totalDistance * ((index + 1) / steps)).toFixed(2)
+        );
+        timer += interval_time;
+
+        if (action === "ADD_X") {
+          high = Math.sin(angle) * distance;
+          ep = parseFloat(gravity * mass * high).toFixed(1) * 1;
           dispatch({
-            type: "SET_KE",
-            payload: ek,
+            type: "SET_GPE",
+            payload: ep,
           });
-
+        } else {
+          high = Math.sin(angle) * (totalDistance - distance);
+          ep = parseFloat(gravity * mass * high).toFixed(1) * 1;
           dispatch({
-            type: "SET_W",
-            payload: ek + ep,
+            type: "SET_GPE",
+            payload: ep,
           });
+        }
 
-          dispatch({
-            type: "SET_TRAVELED_DISTANCE",
-            payload: parseFloat(distance.toFixed(2)),
-          });
-          dispatch({
-            type: "SET_TIMER",
-            payload: parseFloat(timer.toFixed(1)),
-          });
-      }
-	  dispatch({ type: "SET_MOVING", payload: false });
-
-      if (index === steps) {
+        ek = parseFloat(0.5 * mass * velocity ** 2);
         dispatch({
           type: "SET_KE",
-          payload: 0,
+          payload: ek,
         });
+
+        dispatch({
+          type: "SET_ME",
+          payload: ek + ep,
+        });
+
+        dispatch({
+          type: "SET_TRAVELED_DISTANCE",
+          payload: distance,
+        });
+        dispatch({
+          type: "SET_TIMER",
+          payload: parseFloat(timer.toFixed(1)),
+        });
+      }
+      dispatch({ type: "SET_MOVING", payload: false });
+
+      if (index === steps) {
+        ek = 0;
+        dispatch({
+          type: "SET_KE",
+          payload: ek,
+        });
+        dispatch({
+          type: "SET_ME",
+          payload: ek + ep,
+        });
+
         dispatch({
           type: "SET_W",
           payload: 0 + ep,
