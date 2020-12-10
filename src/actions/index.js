@@ -42,7 +42,7 @@ export const setAssigned = (payload) => {
 export const checkAdmin = (payload) => {
   return async (dispatch) => {
     //let __character__ = localStorage.getItem("__character__");
-    let __character__ = `{"id":1,"genre":"M","name":"frank","wight":"65"}`
+    let __character__ = `{"id":1,"genre":"M","name":"frank","wight":"65"}`;
     if (!__character__) return false;
     __character__ = JSON.parse(__character__);
 
@@ -155,6 +155,18 @@ export const resetTrip = () => {
     dispatch({
       type: "SET_WAS_STOPPED",
       payload: false,
+    });
+    dispatch({
+      type: "SET_ME",
+      payload: 0,
+    });
+    dispatch({
+      type: "SET_KE",
+      payload: 0,
+    });
+    dispatch({
+      type: "SET_GPE",
+      payload: 0,
     });
   };
 };
