@@ -7,6 +7,7 @@ import {
   setMass,
   setYTowerB,
   setAngle,
+  calcGPE,
 } from "../../actions";
 
 const isValidKey = (event) => {
@@ -41,6 +42,7 @@ const Indicator = ({
   GPE,
   KE,
   ME,
+  calcGPE,
 }) => {
   const [newYTowerB, setNewYTowerB] = useState("");
   const [newMass, setNewMass] = useState("");
@@ -53,23 +55,42 @@ const Indicator = ({
   const [newangle, setNewAngle] = useState(0);
 
   const assignVelocity = () => {
-    setVelocity(parseFloat(newVelocity));
+    let _newVelocity = parseFloat(newVelocity).toFixed(2) * 1;
+    if (_newVelocity > 0) {
+      setVelocity(parseFloat(_newVelocity));
+      setNewVelocity(_newVelocity);
+    }
     setShowVI(false);
   };
 
   const assignDistance = () => {
-    if (newDistance) setDistance(parseFloat(newDistance));
+    let _newDistance = parseFloat(newDistance).toFixed(2) * 1;
+    if (
+      _newDistance >= 0 && traveledDistance<_newDistance && 
+      (traveledDistance===0 || traveledDistance === totalDistance)
+    ) {
+      setDistance(_newDistance);
+      setNewDistance(_newDistance);
+    }
+
     setShowDI(false);
   };
 
   const assignMass = () => {
-    if (newMass) setMass(parseFloat(newMass));
+    let _newMass = parseFloat(newMass).toFixed(2) * 1;
+    if (_newMass >= 0) {
+      setMass(_newMass);
+      setNewMass(_newMass);
+    }
     setShowMI(false);
   };
 
   const assignYTB = () => {
-    if (newYTowerB && totalDistance > newYTowerB)
-      setYTowerB(parseFloat(newYTowerB));
+    let _newYTowerB = parseFloat(newYTowerB).toFixed(2) * 1;
+    if (_newYTowerB && totalDistance > _newYTowerB) {
+      setYTowerB(_newYTowerB);
+      setNewYTowerB(_newYTowerB);
+    }
     setShowYTBI(false);
   };
 
@@ -82,11 +103,13 @@ const Indicator = ({
   useEffect(() => {
     let angle = 0;
     if (totalDistance > 0 && YTowerB > 0 && totalDistance > YTowerB) {
-      angle = Math.asin(YTowerB / totalDistance);
-      setNewAngle(parseFloat(angle * (180 / Math.PI)).toFixed(1));
+	  //angle = parseFloat(Math.asin(YTowerB / totalDistance)).toFixed(2) * 1;
+	  angle = Math.asin(YTowerB / totalDistance);
+      setNewAngle(parseFloat(angle * (180 / Math.PI)).toFixed(2));
     } else setNewAngle(angle);
 
     setAngle(angle);
+    calcGPE({ angle });
   }, [totalDistance, YTowerB]);
 
   return (
@@ -235,6 +258,7 @@ const mapDispatchToProps = {
   setMass,
   setYTowerB,
   setAngle,
+  calcGPE,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Indicator);

@@ -184,6 +184,49 @@ const waitMotion = (fnt, arg, time) => {
   });
 };
 
+export const calcGPE = ({ angle }) => {
+  return async (dispatch, getState) => {
+    let {
+      boothAction,
+      traveledDistance,
+      gravity,
+      mass,
+      high,
+      totalDistance,
+      KE,
+    } = getState();
+
+    console.log("distance", traveledDistance);
+    console.log("angle", angle);
+
+    let ep;
+    if (boothAction === "ADD_X") {
+      high = parseFloat(Math.sin(angle) * traveledDistance).toFixed(2) * 1;
+      ep = parseFloat(gravity * mass * high).toFixed(2) * 1;
+      console.log("high", high);
+      dispatch({
+        type: "SET_GPE",
+        payload: ep,
+      });
+    } else {
+      high =
+        parseFloat(
+          Math.sin(angle) * (totalDistance - traveledDistance)
+        ).toFixed(2) * 1;
+      ep = parseFloat(gravity * mass * high).toFixed(2) * 1;
+      dispatch({
+        type: "SET_GPE",
+        payload: ep,
+      });
+    }
+
+    dispatch({
+      type: "SET_ME",
+      payload: parseFloat(KE + ep).toFixed(2) * 1,
+    });
+  };
+};
+
 export const startTrip = ({ resume }) => {
   return async (dispatch, getState) => {
     try {
@@ -239,7 +282,12 @@ export const startTrip = ({ resume }) => {
 
       let high;
       let ek, ep;
-
+      /*
+      console.log("step ", step);
+      console.log("steps ", steps);
+      console.log("seconds ", seconds);
+	  console.log("interval_time ", interval_time);
+	  */
       for (var index = step; index < steps; index++) {
         const { isMoving } = getState();
         if (!isMoving) break;
@@ -259,15 +307,19 @@ export const startTrip = ({ resume }) => {
         timer += interval_time;
 
         if (action === "ADD_X") {
-          high = Math.sin(angle) * distance;
-          ep = parseFloat(gravity * mass * high).toFixed(1) * 1;
+          high = parseFloat(Math.sin(angle) * distance).toFixed(2) * 1;
+          console.log("high", high);
+          ep = parseFloat(gravity * mass * high).toFixed(2) * 1;
           dispatch({
             type: "SET_GPE",
             payload: ep,
           });
         } else {
-          high = Math.sin(angle) * (totalDistance - distance);
-          ep = parseFloat(gravity * mass * high).toFixed(1) * 1;
+          high =
+            parseFloat(Math.sin(angle) * (totalDistance - distance)).toFixed(
+              2
+            ) * 1;
+          ep = parseFloat(gravity * mass * high).toFixed(2) * 1;
           dispatch({
             type: "SET_GPE",
             payload: ep,
@@ -282,7 +334,7 @@ export const startTrip = ({ resume }) => {
 
         dispatch({
           type: "SET_ME",
-          payload: ek + ep,
+          payload: parseFloat(ek + ep).toFixed(2) * 1,
         });
 
         dispatch({
@@ -304,7 +356,7 @@ export const startTrip = ({ resume }) => {
         });
         dispatch({
           type: "SET_ME",
-          payload: ek + ep,
+          payload: parseFloat(ek + ep).toFixed(2) * 1,
         });
 
         dispatch({

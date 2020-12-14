@@ -8,8 +8,9 @@ const GPE = 0;
 const KE = 0;
 const ME = 0;
 const gravity = 9.81;
+const boothAction = "ADD_X";
 const defaultState = {
-  boothAction: null,
+  boothAction,
   timer: 0,
   isMoving: false,
   XPosition: 0,
