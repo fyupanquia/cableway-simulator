@@ -56,7 +56,10 @@ const Indicator = ({
 
   const assignVelocity = () => {
     let _newVelocity = parseFloat(newVelocity).toFixed(2) * 1;
-    if (_newVelocity > 0) {
+    if (
+      _newVelocity >= 0 &&
+      (traveledDistance === 0 || traveledDistance === totalDistance)
+    ) {
       setVelocity(parseFloat(_newVelocity));
       setNewVelocity(_newVelocity);
     }
@@ -78,7 +81,10 @@ const Indicator = ({
 
   const assignMass = () => {
     let _newMass = parseFloat(newMass).toFixed(2) * 1;
-    if (_newMass >= 0) {
+    if (
+      _newMass >= 0 &&
+      (traveledDistance === 0 || traveledDistance === totalDistance)
+    ) {
       setMass(_newMass);
       setNewMass(_newMass);
     }
@@ -87,7 +93,11 @@ const Indicator = ({
 
   const assignYTB = () => {
     let _newYTowerB = parseFloat(newYTowerB).toFixed(2) * 1;
-    if (_newYTowerB && totalDistance > _newYTowerB) {
+    if (
+      _newYTowerB >= 0 &&
+      totalDistance > _newYTowerB &&
+      (traveledDistance === 0 || traveledDistance === totalDistance)
+    ) {
       setYTowerB(_newYTowerB);
       setNewYTowerB(_newYTowerB);
     }

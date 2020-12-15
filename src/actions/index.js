@@ -168,6 +168,14 @@ export const resetTrip = () => {
       type: "SET_GPE",
       payload: 0,
     });
+    dispatch({
+      type: "SET_KEF",
+      payload: 0,
+    });
+    dispatch({
+      type: "SET_GPEF",
+      payload: 0,
+    });
   };
 };
 
@@ -194,35 +202,31 @@ export const calcGPE = ({ angle }) => {
       high,
       totalDistance,
       KE,
+      GPEF,
     } = getState();
 
     console.log("distance", traveledDistance);
     console.log("angle", angle);
 
-    let ep;
+    let ep, ek, em;
     if (boothAction === "ADD_X") {
       high = parseFloat(Math.sin(angle) * traveledDistance).toFixed(2) * 1;
-      ep = parseFloat(gravity * mass * high).toFixed(2) * 1;
-      console.log("high", high);
-      dispatch({
-        type: "SET_GPE",
-        payload: ep,
-      });
     } else {
       high =
         parseFloat(
           Math.sin(angle) * (totalDistance - traveledDistance)
         ).toFixed(2) * 1;
-      ep = parseFloat(gravity * mass * high).toFixed(2) * 1;
-      dispatch({
-        type: "SET_GPE",
-        payload: ep,
-      });
     }
+    ep = parseFloat(gravity * mass * high).toFixed(2) * 1;
+    em = parseFloat(KE + ep - GPEF).toFixed(2) * 1;
 
     dispatch({
+      type: "SET_GPE",
+      payload: ep,
+    });
+    dispatch({
       type: "SET_ME",
-      payload: parseFloat(KE + ep).toFixed(2) * 1,
+      payload: em,
     });
   };
 };
@@ -240,6 +244,9 @@ export const startTrip = ({ resume }) => {
         angle,
         gravity,
         mass,
+        GPEF,
+        KEF,
+        YTowerB,
       } = getState();
       let { timer } = getState();
 
@@ -271,7 +278,7 @@ export const startTrip = ({ resume }) => {
         (screenWidth - (boothWidth + rigthTowerWidth / 4)) / intervalStep
       );
 
-      const interval_time = parseFloat((seconds / steps).toFixed(2));
+      const interval_time = parseFloat((seconds / steps).toFixed(4));
 
       let step =
         resume === true
@@ -281,13 +288,13 @@ export const startTrip = ({ resume }) => {
           : 0;
 
       let high;
-      let ek, ep;
-      /*
+      let ek, ep, em;
+
       console.log("step ", step);
       console.log("steps ", steps);
       console.log("seconds ", seconds);
-	  console.log("interval_time ", interval_time);
-	  */
+      console.log("interval_time ", interval_time);
+
       for (var index = step; index < steps; index++) {
         const { isMoving } = getState();
         if (!isMoving) break;
@@ -305,38 +312,33 @@ export const startTrip = ({ resume }) => {
           (totalDistance * ((index + 1) / steps)).toFixed(2)
         );
         timer += interval_time;
-
+        console.log("*****");
         if (action === "ADD_X") {
           high = parseFloat(Math.sin(angle) * distance).toFixed(2) * 1;
-          console.log("high", high);
-          ep = parseFloat(gravity * mass * high).toFixed(2) * 1;
-          dispatch({
-            type: "SET_GPE",
-            payload: ep,
-          });
         } else {
           high =
             parseFloat(Math.sin(angle) * (totalDistance - distance)).toFixed(
               2
             ) * 1;
-          ep = parseFloat(gravity * mass * high).toFixed(2) * 1;
-          dispatch({
-            type: "SET_GPE",
-            payload: ep,
-          });
         }
+        console.log("high", high);
+        console.log("GPEF", GPEF);
+        ep = parseFloat(gravity * mass * high).toFixed(2) * 1;
+        ek = parseFloat(0.5 * mass * velocity ** 2) - KEF;
+        em = parseFloat(ek + ep - GPEF).toFixed(2) * 1;
 
-        ek = parseFloat(0.5 * mass * velocity ** 2);
+        dispatch({
+          type: "SET_GPE",
+          payload: ep,
+        });
         dispatch({
           type: "SET_KE",
           payload: ek,
         });
-
         dispatch({
           type: "SET_ME",
-          payload: parseFloat(ek + ep).toFixed(2) * 1,
+          payload: em,
         });
-
         dispatch({
           type: "SET_TRAVELED_DISTANCE",
           payload: distance,
@@ -345,24 +347,59 @@ export const startTrip = ({ resume }) => {
           type: "SET_TIMER",
           payload: parseFloat(timer.toFixed(1)),
         });
+
+        console.log("ep", ep);
+        console.log("ek", ek);
+        console.log("me", em);
+        console.log("*****");
       }
       dispatch({ type: "SET_MOVING", payload: false });
 
       if (index === steps) {
+        if (action === "ADD_X") {
+          high = YTowerB;
+        } else {
+          high = 0;
+        }
+
         ek = 0;
+        ep = parseFloat(gravity * mass * high).toFixed(2) * 1;
+        em = parseFloat(ek + ep - GPEF).toFixed(2) * 1;
         dispatch({
           type: "SET_KE",
           payload: ek,
         });
+
         dispatch({
-          type: "SET_ME",
-          payload: parseFloat(ek + ep).toFixed(2) * 1,
+          type: "SET_GPE",
+          payload: ep,
         });
 
         dispatch({
-          type: "SET_W",
-          payload: 0 + ep,
+          type: "SET_ME",
+          payload: em,
         });
+
+        if (action === "ADD_X") {
+          dispatch({
+            type: "SET_KEF",
+            payload: ek,
+          });
+          dispatch({
+            type: "SET_GPEF",
+            payload: ep,
+          });
+        } else {
+          dispatch({
+            type: "SET_KEF",
+            payload: ek,
+          });
+          dispatch({
+            type: "SET_GPEF",
+            payload: 0,
+          });
+        }
+
         dispatch({ type: "SET_WAS_STOPPED", payload: false });
         dispatch({ type: "SET_TIMER", payload: seconds });
         dispatch({ type: "SET_TRAVELED_DISTANCE", payload: totalDistance });

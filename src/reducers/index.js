@@ -9,6 +9,8 @@ const KE = 0;
 const ME = 0;
 const gravity = 9.81;
 const boothAction = "ADD_X";
+const GPEF = 0;
+const KEF = 0;
 const defaultState = {
   boothAction,
   timer: 0,
@@ -31,7 +33,9 @@ const defaultState = {
   showPassengers: false,
   angle: defaultAngle,
   GPE,
+  GPEF,
   KE,
+  KEF,
   ME,
   gravity,
 };
@@ -174,6 +178,16 @@ const reducer = (state, action) => {
       return {
         ...reducerState,
         KE: action.payload,
+      };
+    case "SET_GPEF":
+      return {
+        ...reducerState,
+        GPEF: action.payload,
+      };
+    case "SET_KEF":
+      return {
+        ...reducerState,
+        KEF: action.payload,
       };
     case "SET_ME":
       return {
